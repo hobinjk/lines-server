@@ -50,7 +50,7 @@ pub struct ClientMessage {
 pub struct ListRooms;
 
 impl actix::Message for ListRooms {
-    type Result = Vec<String>;
+    type Result = Vec<(String, usize)>;
 }
 
 /// Join room, if room does not exists create new one.
@@ -183,8 +183,8 @@ impl Handler<ListRooms> for GameServer {
     fn handle(&mut self, _: ListRooms, _: &mut Context<Self>) -> Self::Result {
         let mut rooms = Vec::new();
 
-        for key in self.rooms.keys() {
-            rooms.push(key.to_owned())
+        for (room_name, room_set) in &self.rooms {
+            rooms.push((room_name.to_owned(), room_set.len()));
         }
 
         MessageResult(rooms)

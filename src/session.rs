@@ -163,9 +163,15 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsGameSession {
                                 .then(|res, _, ctx| {
                                     match res {
                                         Ok(rooms) => {
-                                            for room in rooms {
-                                                ctx.text(room);
-                                            }
+                                            let rooms_with_occ: Vec<String> = rooms
+                                                .iter()
+                                                .map(|(room, set_len)| {
+                                                    return format!("{}:{}", room, set_len);
+                                                })
+                                                .collect();
+                                            let msg_rooms =
+                                                format!("/rooms {}", rooms_with_occ.join(" "));
+                                            ctx.text(msg_rooms.clone());
                                         }
                                         _ => println!("Something is wrong"),
                                     }
