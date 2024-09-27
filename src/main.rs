@@ -63,12 +63,14 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::from(app_state.clone()))
             .app_data(web::Data::new(server.clone()))
             .service(web::resource("/").to(index))
+            .service(web::resource("/lol").to(index))
             .route("/count", web::get().to(get_count))
             .route("/ws", web::get().to(game_route))
+            .route("/lol/ws", web::get().to(game_route))
             .wrap(Logger::default())
     })
     .workers(2)
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", 31339))?
     .run()
     .await
 }
